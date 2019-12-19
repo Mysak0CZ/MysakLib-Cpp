@@ -1,5 +1,5 @@
 #include "interface.h"
-#include "mysakLib.h"
+#include "logger.h"
 
 #include <bits/stdc++.h>
 
@@ -11,13 +11,14 @@
 
 namespace MLib
 {
-bool askYN(std::string& question, bool plain = false)
+bool askYN(const std::string& question, bool plain = false)
 {
 #ifndef INTERACTIVE
 	plain = true;
 #endif
 	char answer;
 	std::cout << question << " [y/n]: ";
+	std::cout.flush();
 	for (;;) {
 		if (plain) {
 			mLib.makeNormalConsole();
@@ -26,7 +27,7 @@ bool askYN(std::string& question, bool plain = false)
 			answer = tolower(getCharNB());
 		}
 		if (answer == 'y') {
-			mLib.logInfo("askYN \"%s\": true", question.c_str());
+			Log(LOG_verbose, true) << "askYN \"" << question << "\": true";
 			if (plain) {
 				getCharNB();
 				mLib.makeRawConsole();
@@ -35,7 +36,7 @@ bool askYN(std::string& question, bool plain = false)
 			return true;
 		}
 		if (answer == 'n') {
-			mLib.logInfo("askYN \"%s\": false", question.c_str());
+			Log(LOG_verbose, true) << "askYN \"" << question << "\": false";
 			if (plain) {
 				getCharNB();
 				mLib.makeRawConsole();
@@ -85,7 +86,7 @@ long readInt(std::string& query, bool plain = false)
 		if (negative)
 			num = -num;
 	}
-	mLib.logInfo("readInt \"%s\": %ld", query.c_str(), num);
+	Log(LOG_verbose, true) << "readInt \"" << query << "\": " << num;
 	return num;
 }
 
@@ -129,7 +130,7 @@ int getCharB()
 	if (res == 0x1b) {  // ESC sequence
 		res = getchar();
 		if (res != '[') {
-			MysakLib_internals_logError("Escape sequence 2nd char is not '[': %x", res);
+			Log(LOG_error, true) << "Escape sequence 2nd char is not '[', but '" << res << "'";
 			return 0;
 		}
 		res = 0x1b5b;
@@ -149,7 +150,7 @@ int getCharNB()
 		return 0;
 #else
 	int n;
-	if (ioctl(STDIN_FILENO, FIONREAD, &n) != 0 || n <= 0)
+	if (ioctl(fileno(stdin), FIONREAD, &n) != 0 || n <= 0)
 		return 0;
 #endif
 	return getCharB();

@@ -36,7 +36,7 @@ vector2_t<long> getConsoleSize()
 	result.y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 #else
 	struct winsize win;
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &win);
+	ioctl(fileno(stdout), TIOCGWINSZ, &win);
 	result.x = win.ws_col;
 	result.y = win.ws_row;
 #endif
@@ -54,6 +54,17 @@ void setConsolePos(long x, long y)
 #else
 	fprintf(stdout, "%c[%ld;%ldf", 0x1B, y + 1, x + 1);
 #endif
+}
+
+void setConsoleFgColor(long color)
+{
+	fprintf(stdout, "%c[38;5;%ldm", 0x1B, color);
+}
+
+
+void setConsoleBgColor(long color)
+{
+	fprintf(stdout, "%c[48;5;%ldm", 0x1B, color);
 }
 
 /* Count target in string str */

@@ -30,9 +30,9 @@
 namespace MLib
 {
 /* Ask yes no question `{question} [y/n]: ` */
-bool askYN(std::string& question);
+bool askYN(const std::string& question);
 /* Ask yes no question `{question} [y/n]: ` */
-bool askYN(std::string& question, bool plain);
+bool askYN(const std::string& question, bool plain);
 
 /* Read int from stdin */
 long readInt(std::string& query);

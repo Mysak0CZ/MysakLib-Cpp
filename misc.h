@@ -13,6 +13,10 @@ vector2_t<long> getConsoleSize();
 /* set cursor position in console (top-left <=> 0, 0) */
 void setConsolePos(long x, long y);
 
+void setConsoleFgColor(long color);
+void setConsoleBgColor(long color);
+
+
 /* Count target in string str */
 ulong_t strCountChar(std::string& str, char target);
 
