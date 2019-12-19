@@ -1,4 +1,5 @@
 #include "mysakLib.h"
+#include "logger.h"
 
 #include <stdarg.h>
 #include <time.h>
@@ -12,6 +13,8 @@ MysakLib::MysakLib()
 {
 	startTime = time(NULL);
 	randSeed = startTime;
+	loglevel = LOG_debug;
+	logfile.open(M_LOGFILE_NAME, std::ofstream::out | std::ofstream::trunc);
 #if defined INTERACTIVE && !defined _WIN
 	tcgetattr(fileno(stdin), &(oldTerminos));
 	tcgetattr(fileno(stdin), &(newTerminos));
@@ -21,29 +24,32 @@ MysakLib::MysakLib()
 	newTerminos.c_cflag |= CS8;
 	makeRawConsole();
 #endif
-	//logDebug("MysakLib: initialized");
+	Log(LOG_debug, true) << "MysakLib initialized.";
 }
 
 MysakLib::~MysakLib()
 {
-	//logDebug("MysakLib: delete");
+	Log(LOG_debug, true) << "MysakLib destroy";
 	makeNormalConsole();
+	logfile.close();
 }
 
 ulong_t MysakLib::randUInt(ulong_t min, ulong_t max)
 {
 	ulong_t oldSeed = randSeed;
 	randSeed = ((1103515245ULL * randSeed) + 12345ULL) % (1ULL << 31);
-	//logInfo("randUInt %lu -> %lu %lu~%lu = %lu", oldSeed, randSeed, min, max, (randSeed % (max - min)) + min);
-	return (randSeed % (max - min)) + min;
+	ulong_t res = (randSeed % (max - min)) + min;
+	Log(LOG_verbose, true) << "randUInt " << oldSeed << " -> " << randSeed << ' ' << min << '~' << max << " = " << res;
+	return res;
 }
 
 long MysakLib::randInt(long min, long max)
 {
 	ulong_t oldSeed = randSeed;
 	randSeed = ((1103515245ULL * randSeed) + 12345ULL) % (1ULL << 31);
-	//logInfo("ranInt %lu -> %lu %ld~%ld = %ld", oldSeed, randSeed, min, max, (randSeed % (max - min)) + min);
-	return (randSeed % (max - min)) + min;
+	long res = (randSeed % (max - min)) + min;
+	Log(LOG_verbose, true) << "randInt " << oldSeed << " -> " << randSeed << ' ' << min << '~' << max << " = " << res;
+	return res;
 }
 
 bool MysakLib::prob(ulong_t probability)
@@ -51,7 +57,7 @@ bool MysakLib::prob(ulong_t probability)
 	ulong_t oldSeed = randSeed;
 	randSeed = ((1103515245ULL * randSeed) + 12345ULL) % (1ULL << 31);
 	bool result = (randSeed % 100) < probability ? true : false;
-	//logInfo("prob (%lu%%) %lu -> %lu (%lu%%) = %s", probability, oldSeed, randSeed, (randSeed % 100), result ? "true" : "false");
+	Log(LOG_verbose, true) << "prob (" << probability << "%) " << oldSeed << " -> " << randSeed << " (" << (randSeed % 100) << ") = " << (result ? "true" : "false");
 	return result;
 }
 

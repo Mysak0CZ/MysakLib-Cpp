@@ -1,10 +1,7 @@
 #pragma once
 
+#include "mysakLib.h"
 #include "types.h"
-
-#ifndef M_LOGFILE_NAME
-#	define M_LOGFILE_NAME "mLib.log"
-#endif
 
 #if defined INTERACTIVE && !defined _WIN
 #	include <termios.h>
@@ -17,35 +14,6 @@ const unsigned LOG_warning = 1;
 const unsigned LOG_info = 2;
 const unsigned LOG_verbose = 3;
 const unsigned LOG_debug = 4;
-class Log;
-
-class Logger final
-{
-	friend class Log;
-
-   public:
-	void setLoggingLevel(unsigned level)
-	{
-		LOGGER.level = level;
-	}
-
-   private:
-	std::ofstream outfile;
-	static Logger LOGGER;
-	unsigned level = LOG_debug;
-
-	Logger();
-
-	~Logger();
-
-	template <typename T>
-	Logger& operator<<(const T& msg)
-	{
-		outfile << msg;
-		outfile.flush();
-		return *this;
-	}
-};
 
 class Log
 {
@@ -54,22 +22,22 @@ class Log
 	{
 		switch (type) {
 			case LOG_error:
-				Logger::LOGGER << "[ERROR] ";
+				MysakLib::INSTANCE.logfile << "[ERROR] ";
 				break;
 			case LOG_warning:
-				Logger::LOGGER << "[WARN]  ";
+				MysakLib::INSTANCE.logfile << "[WARN]  ";
 				break;
 			case LOG_info:
-				Logger::LOGGER << "[INFO]  ";
+				MysakLib::INSTANCE.logfile << "[INFO]  ";
 				break;
 			case LOG_verbose:
-				Logger::LOGGER << "[VERB]  ";
+				MysakLib::INSTANCE.logfile << "[VERB]  ";
 				break;
 			case LOG_debug:
-				Logger::LOGGER << "[DEBUG] ";
+				MysakLib::INSTANCE.logfile << "[DEBUG] ";
 				break;
 			default:
-				Logger::LOGGER << "[?????] ";
+				MysakLib::INSTANCE.logfile << "[?????] ";
 				break;
 		}
 	}
@@ -93,8 +61,8 @@ class Log
 	template <typename T>
 	Log& operator<<(const T& msg)
 	{
-		if (level <= Logger::LOGGER.level)
-			Logger::LOGGER << msg;
+		if (level <= MysakLib::INSTANCE.loglevel)
+			MysakLib::INSTANCE.logfile << msg;
 		return *this;
 	}
 };

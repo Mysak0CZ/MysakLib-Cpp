@@ -6,13 +6,22 @@
 #	include <termios.h>
 #endif
 
+#ifndef M_LOGFILE_NAME
+#	define M_LOGFILE_NAME "mLib.log"
+#endif
 
 namespace MLib
 {
+class Log;
+
 class MysakLib
 {
+	friend class Log;
+
    public:
 	static MysakLib INSTANCE;
+
+	unsigned loglevel;
 
    private:
 	ulong_t randSeed;
@@ -21,6 +30,8 @@ class MysakLib
 	termios oldTerminos;
 	termios newTerminos;
 #endif
+
+	std::ofstream logfile;
 
 	MysakLib();
 	~MysakLib();

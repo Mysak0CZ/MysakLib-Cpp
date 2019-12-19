@@ -2,19 +2,6 @@
 
 namespace MLib
 {
-Logger Logger::LOGGER;
-
-Logger::Logger()
-{
-	outfile.open(M_LOGFILE_NAME, std::ofstream::out | std::ofstream::trunc);
-	Log(LOG_verbose, true) << "Logger initialized";
-}
-
-Logger::~Logger()
-{
-	outfile.close();
-}
-
 Log::Log(unsigned type, bool internal)
 {
 	level = type;
@@ -25,16 +12,16 @@ Log::Log(unsigned type, bool internal)
 	info = localtime(&rawtime);
 
 	std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", info);
-	if (level <= Logger::LOGGER.level) {
-		Logger::LOGGER << '[' << buf << "]" << (internal ? " I " : "   ");
+	if (level <= MysakLib::INSTANCE.loglevel) {
+		MysakLib::INSTANCE.logfile << '[' << buf << ']' << (internal ? " I " : "   ");
 		writeTypeString(type);
 	}
 }
 
 Log::~Log()
 {
-	if (level <= Logger::LOGGER.level)
-		Logger::LOGGER << '\n';
+	if (level <= MysakLib::INSTANCE.loglevel)
+		MysakLib::INSTANCE.logfile << std::endl;
 }
 
 }  // namespace MLib
