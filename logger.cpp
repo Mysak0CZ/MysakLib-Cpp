@@ -20,8 +20,10 @@ Log::Log(unsigned type, bool internal)
 
 Log::~Log()
 {
-	if (level <= MysakLib::INSTANCE.loglevel)
+	if (level <= MysakLib::INSTANCE.loglevel) {
 		MysakLib::INSTANCE.logfile << std::endl;
+		MysakLib::INSTANCE.logfile.flush();
+	}
 }
 
 }  // namespace MLib

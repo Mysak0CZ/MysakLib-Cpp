@@ -20,6 +20,40 @@ template <typename T>
 class vector2_t
 {
    public:
+	constexpr vector2_t() :
+	    vector2_t(0, 0){};
+	constexpr vector2_t(vector2_t<T>& other)
+	{
+		set(other);
+	}
+	constexpr vector2_t(T sx, T sy)
+	{
+		x = sx;
+		y = sy;
+	}
+
 	T x;
 	T y;
+
+	constexpr void set(vector2_t<T> const& other)
+	{
+		x = other.x;
+		y = other.y;
+	}
+
+	void add(vector2_t<T> const& other)
+	{
+		x += other.x;
+		y += other.y;
+	}
+
+	bool operator==(vector2_t<T> const& other)
+	{
+		return (other.x == x) && (other.y == y);
+	}
+
+	bool operator!=(vector2_t<T> const& other)
+	{
+		return (other.x != x) || (other.y != y);
+	}
 };

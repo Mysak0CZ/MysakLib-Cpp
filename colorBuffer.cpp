@@ -3,28 +3,6 @@
 
 namespace MLib
 {
-// class ColorBuffer
-// {
-//    private:
-// 	long size_x;
-// 	long size_y;
-// 	bool needUpdate = true;
-// 	std::vector<uint32_t> frame;
-// 	std::vector<uint32_t> nxframe;
-
-//    public:
-// 	ColorBuffer();
-// 	~ColorBuffer();
-
-// 	void draw();
-// 	void redraw();
-// 	bool set(long x, long y, char c, uint8_t colorF, uint8_t colorB);
-// 	bool set(long x, long y, uint32_t pack);
-
-// 	void resize(long x, long y);
-// 	void clear();
-// };
-
 ColorBuffer::ColorBuffer()
 {
 }
@@ -32,6 +10,9 @@ ColorBuffer::ColorBuffer()
 ColorBuffer::~ColorBuffer()
 {
 }
+
+constexpr uint32_t ColorBuffer::BLANK;
+constexpr uint32_t ColorBuffer::EMPTY;
 
 void ColorBuffer::resize(long x, long y)
 {
@@ -46,10 +27,14 @@ void ColorBuffer::resize(long x, long y)
 
 void ColorBuffer::clear()
 {
-	for (long i = 0; i < size_x * size_y; i++) {
-		frame[i] = 0;
-		nxframe[i] = empty;
-	}
+	frame.assign(size_x * size_y, BLANK);
+	nxframe.assign(size_x * size_y, BLANK);
+}
+
+void ColorBuffer::getSize(vector2_t<long>& target) const
+{
+	target.x = size_x;
+	target.y = size_y;
 }
 
 bool ColorBuffer::set(long x, long y, uint32_t pack)
@@ -107,7 +92,7 @@ void ColorBuffer::draw()
 		}
 	}
 	needUpdate = false;
-	setConsolePos(0, size_y);
+	setConsolePos(0, 0);
 	fprintf(stdout, "%c[0m", 0x1B);
 	fflush(stdout);
 }

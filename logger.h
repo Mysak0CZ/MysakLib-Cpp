@@ -46,7 +46,9 @@ class Log
 
    public:
 	Log() :
-	    Log(LOG_info) {}
+	    Log(LOG_info)
+	{
+	}
 
 	Log(unsigned type) :
 	    Log(type, false)

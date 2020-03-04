@@ -26,9 +26,8 @@ void wait(ulong_t milliseconds)
 }
 
 /* Get size of the console (real, not buffer) */
-vector2_t<long> getConsoleSize()
+void getConsoleSize(vector2_t<long>& result)
 {
-	vector2_t<long> result;
 #ifdef _WIN
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -40,7 +39,6 @@ vector2_t<long> getConsoleSize()
 	result.x = win.ws_col;
 	result.y = win.ws_row;
 #endif
-	return result;
 }
 
 /* set cursor position in console (top-left <=> 0, 0) */
@@ -77,5 +75,17 @@ ulong_t strCountChar(std::string& str, char target)
 	}
 	return result;
 }
+
+template <typename... Args>
+std::string string_format(const std::string& format, Args... args)
+{
+	size_t size = snprintf(nullptr, 0, format.c_str(), args...) + 1;  // Extra space for '\0'
+	if (size <= 0)
+		throw std::runtime_error("Error during formatting.");
+	std::unique_ptr<char[]> buf(new char[size]);
+	snprintf(buf.get(), size, format.c_str(), args...);
+	return std::string(buf.get());
+}
+
 
 }  // namespace MLib

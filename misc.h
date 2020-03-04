@@ -20,4 +20,7 @@ void setConsoleBgColor(long color);
 /* Count target in string str */
 ulong_t strCountChar(std::string& str, char target);
 
+template <typename... Args>
+std::string string_format(const std::string& format, Args... args);
+
 }  // namespace MLib

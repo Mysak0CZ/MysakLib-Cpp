@@ -26,9 +26,13 @@ class MysakLib
    private:
 	ulong_t randSeed;
 	ulong_t startTime;
-#if defined INTERACTIVE && !defined _WIN
+#ifdef INTERACTIVE
+#	ifdef _WIN
+	DWORD oldDwMode;
+#	else
 	termios oldTerminos;
 	termios newTerminos;
+#	endif
 #endif
 
 	std::ofstream logfile;

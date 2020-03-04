@@ -60,7 +60,8 @@ constexpr inline char packGetChar(uint32_t pack)
 class ColorBuffer
 {
    public:
-	static constexpr uint32_t empty = makePack(Color::Black, Color::BrightWhite, ' ');
+	static constexpr uint32_t BLANK = makePack(Color::Black, Color::BrightWhite, ' ');
+	static constexpr uint32_t EMPTY = 0;
 
    private:
 	long size_x;
@@ -80,5 +81,6 @@ class ColorBuffer
 
 	void resize(long x, long y);
 	void clear();
+	void getSize(vector2_t<long>& target) const;
 };
 }  // namespace MLib

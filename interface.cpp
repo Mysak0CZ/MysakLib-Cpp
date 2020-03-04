@@ -90,21 +90,23 @@ long readInt(std::string& query, bool plain = false)
 	return num;
 }
 
-std::string readStr(std::string& query, size_t maxLen, bool plain = false)
-{
-#ifndef INTERACTIVE
-	plain = true;
-#endif
-	return "";
-}
+// TODO
+// std::string readStr(std::string& query, size_t maxLen, bool plain = false)
+// {
+// #ifndef INTERACTIVE
+// 	plain = true;
+// #endif
+// 	return "";
+// }
 
-long ioSelection(std::string& title, std::vector<std::string>& options, bool plain = false)
-{
-#ifndef INTERACTIVE
-	plain = true;
-#endif
-	return 0;
-}
+// TODO
+// long ioSelection(std::string& title, std::vector<std::string>& options, bool plain = false)
+// {
+// #ifndef INTERACTIVE
+// 	plain = true;
+// #endif
+// 	return 0;
+// }
 
 int getCharB()
 {
